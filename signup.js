@@ -50,22 +50,47 @@ Component.extend({
             </p>
 
         {{ else }}
+            {{# eq(this.page, "signup") }}
 
-            <form on:submit="this.signUp(scope.event)">
-                <h2>Sign Up</h2>
+                <form on:submit="this.signUp(scope.event)">
+                    <h2>Sign Up</h2>
 
-                <input placeholder="email" value:to="this.email" />
+                    <input placeholder="email" value:to="this.email" />
 
-                <input type="password"
+                    <input type="password"
+                             placeholder="password" value:to="this.password" />
+
+                    <button>Sign Up</button>
+
+                    <aside>
+                        Have an account?
+                        <a href="javascript://" on:click="this.page = 'login'">Log in</a>
+                    </aside>
+                </form>
+
+            {{ else }}
+
+                <form on:submit="this.logIn(scope.event)">
+                    <h2>Log In</h2>
+
+                    <input placeholder="email" value:to="this.email" />
+
+                    <input type="password"
                          placeholder="password" value:to="this.password" />
 
-                <button>Sign Up</button>
+                    <button>Log In</button>
 
-                <aside>
-                    Have an account?
-                    <a href="javascript://">Log in</a>
-                </aside>
-            </form>
+                    {{# if(this.logInError) }}
+                        <div class="error">{{ this.logInError.message }}</div>
+                    {{/ if }}
+
+                    <aside>
+                        Don’t have an account?
+                        <a href="javascript://" on:click="this.page = 'signup'">Sign up</a>
+                    </aside>
+                </form>
+
+            {{/ eq }}
 
         {{/ if }}
     `,
@@ -101,6 +126,27 @@ Component.extend({
             }).then(function() {
                 return Promise.reject({message: "Unauthorized"});
             });
-        }
+        },
+
+        page: {default: "login"},
+        logIn: function(event) {
+            event.preventDefault();
+            this.sessionPromise = ajax({
+                url: "/api/session",
+                type: "post",
+                data: {
+                    user: {
+                        email: this.email,
+                        password: this.password
+                    }
+                }
+            });
+
+            this.logInError = null;
+            this.sessionPromise.catch(function(error) {
+                this.logInError = error;
+            }.bind(this));
+        },
+        logInError: "any"
     }
 });
