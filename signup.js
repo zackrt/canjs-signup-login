@@ -51,13 +51,13 @@ Component.extend({
 
         {{ else }}
 
-            <form>
+            <form on:submit="this.signUp(scope.event)">
                 <h2>Sign Up</h2>
 
-                <input placeholder="email" />
+                <input placeholder="email" value:to="this.email" />
 
                 <input type="password"
-                         placeholder="password" />
+                         placeholder="password" value:to="this.password" />
 
                 <button>Sign Up</button>
 
@@ -76,6 +76,22 @@ Component.extend({
                     url: "/api/session"
                 });
             }
+        },
+
+        email: "string",
+        password: "string",
+        signUp: function(event) {
+            event.preventDefault();
+            this.sessionPromise = ajax({
+                url: "/api/users",
+                type: "post",
+                data: {
+                    email: this.email,
+                    password: this.password
+                }
+            }).then(function(user) {
+                return {user: user};
+            });
         }
     }
 });
