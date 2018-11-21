@@ -1,5 +1,7 @@
 import { ajax, Component, fixture } from "//unpkg.com/can@5/core.mjs";
 
+
+//fixtures emulate backend server functionality
 fixture("GET /api/session", function(request, response) {
     const session = localStorage.getItem("session");
     if (session) {
