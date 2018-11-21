@@ -46,7 +46,7 @@ Component.extend({
 
             <p class="welcome-message">
                 Welcome {{ this.sessionPromise.value.user.email }}.
-                <a href="javascript://">Log out</a>
+                <a href="javascript://" on:click="this.logOut()">Log out</a>
             </p>
 
         {{ else }}
@@ -91,6 +91,15 @@ Component.extend({
                 }
             }).then(function(user) {
                 return {user: user};
+            });
+        },
+
+        logOut: function() {
+            this.sessionPromise = ajax({
+                url: "/api/session",
+                type: "delete"
+            }).then(function() {
+                return Promise.reject({message: "Unauthorized"});
             });
         }
     }
