@@ -42,26 +42,40 @@ fixture("POST /api/session", function(request, response) {
 Component.extend({
     tag: "signup-login",
     view: `
-        <p class="welcome-message">
-            Welcome Someone.
-            <a href="javascript://">Log out</a>
-        </p>
+        {{# if(this.sessionPromise.value) }}
 
-        <form>
-            <h2>Sign Up</h2>
+            <p class="welcome-message">
+                Welcome {{ this.sessionPromise.value.user.email }}.
+                <a href="javascript://">Log out</a>
+            </p>
 
-            <input placeholder="email" />
+        {{ else }}
 
-            <input type="password"
-                     placeholder="password" />
+            <form>
+                <h2>Sign Up</h2>
 
-            <button>Sign Up</button>
+                <input placeholder="email" />
 
-            <aside>
-                Have an account?
-                <a href="javascript://">Log in</a>
-            </aside>
-        </form>
+                <input type="password"
+                         placeholder="password" />
+
+                <button>Sign Up</button>
+
+                <aside>
+                    Have an account?
+                    <a href="javascript://">Log in</a>
+                </aside>
+            </form>
+
+        {{/ if }}
     `,
-    ViewModel: {}
+    ViewModel: {
+        sessionPromise: {
+            default: function() {
+                return ajax({
+                    url: "/api/session"
+                });
+            }
+        }
+    }
 });
