@@ -10,6 +10,7 @@ fixture("GET /api/session", function(request, response) {
         response(404, { message: "No session" }, {}, "unauthorized");
     }
 });
+//send post with user email
 fixture("POST /api/users", function(request, response) {
     const session = {
         user: { email: request.data.email }
