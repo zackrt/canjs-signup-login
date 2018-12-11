@@ -3,3 +3,5 @@ simple login and signup form coded in canjs, component tag added to the html fil
 css is boilerplate
 the button functions on click, and the backend uses fixtures.
 syntax is similar to react.js
+##changes to make:
+add picture to background?
